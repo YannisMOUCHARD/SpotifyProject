@@ -13,8 +13,22 @@ import { buildTitle } from '../../constants/appMeta.js';
 // Mock playlists data
 const playlistsData = {
     items: [
-        { id: 'playlist1', name: 'My Playlist 1', images: [{ url: 'https://via.placeholder.com/56' }], owner: { display_name: 'User1' }, tracks: { total: 5 }, external_urls: { spotify: 'https://open.spotify.com/playlist/playlist1' } },
-        { id: 'playlist2', name: 'My Playlist 2', images: [{ url: 'https://via.placeholder.com/56' }], owner: { display_name: 'User2' }, tracks: { total: 10 }, external_urls: { spotify: 'https://open.spotify.com/playlist/playlist2' } },
+        { 
+            id: 'playlist1', 
+            name: 'My Playlist 1', 
+            images: [{ url: 'https://via.placeholder.com/56' }], 
+            owner: { display_name: 'User1' }, 
+            tracks: { total: 5 }, 
+            external_urls: { spotify: 'https://open.spotify.com/playlist/playlist1' } 
+        },
+        { 
+            id: 'playlist2', 
+            name: 'My Playlist 2', 
+            images: [{ url: 'https://via.placeholder.com/56' }], 
+            owner: { display_name: 'User2' }, 
+            tracks: { total: 10 }, 
+            external_urls: { spotify: 'https://open.spotify.com/playlist/playlist2' } 
+        },
     ],
     total: 2
 };

@@ -1,0 +1,123 @@
+.playlist-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.playlist-header {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  align-items: flex-start;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid var(--color-border, #333);
+}
+
+.playlist-cover {
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.playlist-info {
+  flex: 1;
+}
+
+.playlist-title {
+  margin: 0 0 1rem 0;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #000000;
+}
+
+.playlist-description {
+  color: #666666;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.playlist-meta {
+  display: flex;
+  gap: 2rem;
+  color: #666666;
+  font-size: 0.9rem;
+}
+
+.playlist-spotify-link {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--color-primary, #1db954);
+  color: white;
+  text-decoration: none;
+  border-radius: 20px;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.playlist-spotify-link:hover {
+  background-color: var(--color-primary-hover, #1ed760);
+}
+
+.tracks-section {
+  margin-top: 2rem;
+}
+
+.tracks-title {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-text-primary, #fff);
+  font-weight: bold;
+}
+
+.tracks-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.playlist-detail-loading,
+.playlist-detail-error {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.1rem;
+}
+
+.playlist-detail-loading {
+  color: var(--color-primary, #1db954);
+}
+
+.playlist-detail-error {
+  color: var(--color-error, #ff6b6b);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .playlist-detail-container {
+    padding: 1rem;
+  }
+
+  .playlist-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem;
+  }
+  
+  .playlist-cover {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+  }
+  
+  .playlist-title {
+    font-size: 2rem;
+  }
+
+  .playlist-meta {
+    justify-content: center;
+  }
+}

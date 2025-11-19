@@ -4,10 +4,11 @@ import { describe, expect, test } from '@jest/globals';
 import '@testing-library/jest-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import PlaylistPage from './PlaylistPage.js';
-import * as spotifyApi from '../api/spotify-playlists.js';
+import PlaylistDetailPage from './PlaylistDetailPage.jsx';
+import * as spotifyApi from '../../api/spotify-playlists.js';
 import { beforeEach, afterEach, jest } from '@jest/globals';
-import { KEY_ACCESS_TOKEN } from '../../../src/constants/storageKeys.js';
+import { KEY_ACCESS_TOKEN } from '../../constants/storageKeys.js';
+import * as handleTokenErrorModule from '../../utils/handleTokenError.js';
 
 const playlistData = {
     id: 'playlist1',
@@ -15,7 +16,6 @@ const playlistData = {
     description: 'A cool playlist',
     images: [{ url: 'https://via.placeholder.com/56' }],
     owner: { display_name: 'User1' },
-    tracks: { total: 5 },
     external_urls: { spotify: 'https://open.spotify.com/playlist/playlist1' },
     tracks: {
         items: [
@@ -48,12 +48,12 @@ describe('PlaylistPage', () => {
         render(
             <MemoryRouter initialEntries={['/playlist/playlist1']}>
                 <Routes>
-                    <Route path="/playlist/:id" element={<PlaylistPage />} />
+                    <Route path="/playlist/:id" element={<PlaylistDetailPage />} />
                 </Routes>
             </MemoryRouter>
         );
 
-        expect(document.title).toBe('Playlist | Spotify App');
+        expect(document.title).toBe('Playlist');
         
         // loading state
         expect(screen.getByRole('status')).toHaveTextContent(/loading playlist/i);
@@ -90,8 +90,8 @@ describe('PlaylistPage', () => {
         // verify API called with correct params
         await waitFor(() => {
             expect(spotifyApi.fetchPlaylistById).toHaveBeenCalledTimes(1);
-            expect(spotifyApi.fetchPlaylistById).toHaveBeenCalledWith('test-token', 'playlist1');
         });
+        expect(spotifyApi.fetchPlaylistById).toHaveBeenCalledWith('test-token', 'playlist1');
     });
 
     test('displays error message on fetch failure', async () => {
@@ -100,7 +100,7 @@ describe('PlaylistPage', () => {
         render(
             <MemoryRouter initialEntries={['/playlist/playlist1']}>
                 <Routes>
-                    <Route path="/playlist/:id" element={<PlaylistPage />} />
+                    <Route path="/playlist/:id" element={<PlaylistDetailPage />} />
                 </Routes>
             </MemoryRouter>
         );
@@ -121,7 +121,7 @@ describe('PlaylistPage', () => {
         render(
             <MemoryRouter initialEntries={['/playlist/playlist1']}>
                 <Routes>
-                    <Route path="/playlist/:id" element={<PlaylistPage />} />
+                    <Route path="/playlist/:id" element={<PlaylistDetailPage />} />
                 </Routes>
             </MemoryRouter>
         );
@@ -137,13 +137,13 @@ describe('PlaylistPage', () => {
     });
 
     test("handleTokenError called on token expiry error", async () => {
-        const handleTokenErrorSpy = jest.spyOn(require('../utils/handleTokenError.js'), 'handleTokenError');
+        const handleTokenErrorSpy = jest.spyOn(handleTokenErrorModule, 'handleTokenError');
         jest.spyOn(spotifyApi, 'fetchPlaylistById').mockResolvedValue({ playlist: null, error: 'The access token expired' });
 
         render(
             <MemoryRouter initialEntries={['/playlist/playlist1']}>
                 <Routes>
-                    <Route path="/playlist/:id" element={<PlaylistPage />} />
+                    <Route path="/playlist/:id" element={<PlaylistDetailPage />} />
                     {/* Dummy login route for redirection when token is expired */}
                     <Route path="/login" element={<div>Login Page</div>} />
                 </Routes>

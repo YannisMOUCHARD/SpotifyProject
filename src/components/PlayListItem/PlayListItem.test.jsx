@@ -2,10 +2,22 @@
 
 import { describe, expect, test } from '@jest/globals'
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import PlayListItem from './PlayListItem';
 
+const mockNavigate = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate
+}));
+
 describe('PlayListItem component', () => {
+    beforeEach(() => {
+        mockNavigate.mockClear();
+    });
+
     test('renders playlist information correctly', () => {
         // Arrange
         const playlist = {
@@ -17,7 +29,11 @@ describe('PlayListItem component', () => {
             external_urls: { spotify: 'https://open.spotify.com/playlist/playlist1' }
         };
         // Act
-        render(<PlayListItem playlist={playlist} />);
+        render(
+            <MemoryRouter>
+                <PlayListItem playlist={playlist} />
+            </MemoryRouter>
+        );
 
         // Assert
         // items are rendered correctly
@@ -32,5 +48,94 @@ describe('PlayListItem component', () => {
         expect(screen.getByText(`${playlist.tracks.total} tracks`)).toBeInTheDocument();
         // link is rendered correctly
         expect(screen.getByRole('link')).toHaveAttribute('href', playlist.external_urls.spotify);
+    });
+
+    test('navigates to playlist detail page on click', () => {
+        const playlist = {
+            id: 'playlist1',
+            name: 'Test Playlist',
+            images: [{ url: 'test.jpg' }],
+            owner: { display_name: 'Test Owner' },
+            tracks: { total: 15 },
+            external_urls: { spotify: 'https://open.spotify.com/playlist/playlist1' }
+        };
+
+        render(
+            <MemoryRouter>
+                <PlayListItem playlist={playlist} />
+            </MemoryRouter>
+        );
+
+        const playlistButton = screen.getByRole('button');
+        fireEvent.click(playlistButton);
+
+        expect(mockNavigate).toHaveBeenCalledWith(`/playlist/${playlist.id}`);
+    });
+
+    test('navigates to playlist detail page on Enter key press', () => {
+        const playlist = {
+            id: 'playlist1',
+            name: 'Test Playlist',
+            images: [{ url: 'test.jpg' }],
+            owner: { display_name: 'Test Owner' },
+            tracks: { total: 15 },
+            external_urls: { spotify: 'https://open.spotify.com/playlist/playlist1' }
+        };
+
+        render(
+            <MemoryRouter>
+                <PlayListItem playlist={playlist} />
+            </MemoryRouter>
+        );
+
+        const playlistButton = screen.getByRole('button');
+        fireEvent.keyDown(playlistButton, { key: 'Enter' });
+
+        expect(mockNavigate).toHaveBeenCalledWith(`/playlist/${playlist.id}`);
+    });
+
+    test('does not navigate on other key presses', () => {
+        const playlist = {
+            id: 'playlist1',
+            name: 'Test Playlist',
+            images: [{ url: 'test.jpg' }],
+            owner: { display_name: 'Test Owner' },
+            tracks: { total: 15 },
+            external_urls: { spotify: 'https://open.spotify.com/playlist/playlist1' }
+        };
+
+        render(
+            <MemoryRouter>
+                <PlayListItem playlist={playlist} />
+            </MemoryRouter>
+        );
+
+        const playlistButton = screen.getByRole('button');
+        fireEvent.keyDown(playlistButton, { key: 'Space' });
+
+        expect(mockNavigate).not.toHaveBeenCalled();
+    });
+
+    test('prevents event propagation when clicking Spotify link', () => {
+        const playlist = {
+            id: 'playlist1',
+            name: 'Test Playlist',
+            images: [{ url: 'test.jpg' }],
+            owner: { display_name: 'Test Owner' },
+            tracks: { total: 15 },
+            external_urls: { spotify: 'https://open.spotify.com/playlist/playlist1' }
+        };
+
+        render(
+            <MemoryRouter>
+                <PlayListItem playlist={playlist} />
+            </MemoryRouter>
+        );
+
+        const spotifyLink = screen.getByRole('link');
+        fireEvent.click(spotifyLink);
+
+        // Should not navigate to playlist detail when clicking Spotify link
+        expect(mockNavigate).not.toHaveBeenCalled();
     });
 });
