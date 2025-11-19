@@ -8,6 +8,7 @@ import PlaylistDetailPage from './PlaylistDetailPage.jsx';
 import * as spotifyApi from '../../api/spotify-playlists.js';
 import { beforeEach, afterEach, jest } from '@jest/globals';
 import { KEY_ACCESS_TOKEN } from '../../constants/storageKeys.js';
+import * as handleTokenErrorModule from '../../utils/handleTokenError.js';
 
 const playlistData = {
     id: 'playlist1',
@@ -15,7 +16,6 @@ const playlistData = {
     description: 'A cool playlist',
     images: [{ url: 'https://via.placeholder.com/56' }],
     owner: { display_name: 'User1' },
-    tracks: { total: 5 },
     external_urls: { spotify: 'https://open.spotify.com/playlist/playlist1' },
     tracks: {
         items: [
@@ -90,8 +90,8 @@ describe('PlaylistPage', () => {
         // verify API called with correct params
         await waitFor(() => {
             expect(spotifyApi.fetchPlaylistById).toHaveBeenCalledTimes(1);
-            expect(spotifyApi.fetchPlaylistById).toHaveBeenCalledWith('test-token', 'playlist1');
         });
+        expect(spotifyApi.fetchPlaylistById).toHaveBeenCalledWith('test-token', 'playlist1');
     });
 
     test('displays error message on fetch failure', async () => {
@@ -137,7 +137,7 @@ describe('PlaylistPage', () => {
     });
 
     test("handleTokenError called on token expiry error", async () => {
-        const handleTokenErrorSpy = jest.spyOn(require('../../utils/handleTokenError.js'), 'handleTokenError');
+        const handleTokenErrorSpy = jest.spyOn(handleTokenErrorModule, 'handleTokenError');
         jest.spyOn(spotifyApi, 'fetchPlaylistById').mockResolvedValue({ playlist: null, error: 'The access token expired' });
 
         render(
