@@ -1,5 +1,6 @@
 import './PlayListItem.css';
 import '../ListItem.css';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * Playlist item component
@@ -7,8 +8,20 @@ import '../ListItem.css';
  * @returns JSX.Element
  */
 export default function PlayListItem({ playlist }) {
+  const navigate = useNavigate();
+  const handleNavigate = () => navigate(`/playlist/${playlist.id}`);
+
   return (
-  <li key={playlist.id} data-testid={`playlist-item-${playlist.id}`} className="list-item playlist-item">
+    <li
+      key={playlist.id}
+      data-testid={`playlist-item-${playlist.id}`}
+      className="list-item playlist-item"
+      role="button"
+      tabIndex={0}
+      onClick={handleNavigate}
+      onKeyDown={(e) => { if (e.key === 'Enter') handleNavigate(); }}
+      style={{ cursor: 'pointer' }}
+    >
       <img
         src={playlist.images[0]?.url}
         alt="cover"
@@ -21,13 +34,14 @@ export default function PlayListItem({ playlist }) {
         </div>
         <div className="playlist-item-tracks">{playlist.tracks.total} tracks</div>
       </div>
-      <a
+      <a 
         href={playlist.external_urls.spotify}
+        className="playlist-link"
         target="_blank"
         rel="noopener noreferrer"
-        className="playlist-link"
+        onClick={(e) => e.stopPropagation()}
       >
-        Open
+        Open in Spotify
       </a>
     </li>
   );
