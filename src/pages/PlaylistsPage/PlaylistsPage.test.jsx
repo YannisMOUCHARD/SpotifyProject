@@ -1,34 +1,34 @@
 // src/pages/PlaylistsPage.test.jsx
+/* global require */
 
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test, beforeEach, afterEach, jest } from '@jest/globals';
 import '@testing-library/jest-dom';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import PlaylistsPage, { limit } from './PlaylistsPage.jsx';
 import * as spotifyApi from '../../api/spotify-me.js';
-import { beforeEach, afterEach, jest } from '@jest/globals';
 import { KEY_ACCESS_TOKEN } from '../../constants/storageKeys.js';
 import { buildTitle } from '../../constants/appMeta.js';
 
 // Mock playlists data
 const playlistsData = {
-    items: [    
-        { 
-            id: 'playlist1', 
-            name: 'My Playlist 1', 
-            images: [{ url: 'https://via.placeholder.com/56' }], 
-            owner: { display_name: 'User1' }, 
-            tracks: { total: 5 }, 
-            external_urls: { spotify: 'https://open.spotify.com/playlist/playlist1' } 
+    items: [
+        {
+            id: 'playlist1',
+            name: 'My Playlist 1',
+            images: [{ url: 'https://via.placeholder.com/56' }],
+            owner: { display_name: 'User1' },
+            tracks: { total: 5 },
+            external_urls: { spotify: 'https://open.spotify.com/playlist/playlist1' }
         },
-        { 
-            id: 'playlist2', 
-            name: 'My Playlist 2', 
-            images: [{ url: 'https://via.placeholder.com/56' }], 
-            owner: { display_name: 'User2' }, 
-            tracks: { total: 10 }, 
-            external_urls: { spotify: 'https://open.spotify.com/playlist/playlist2' } 
-        },
+        {
+            id: 'playlist2',
+            name: 'My Playlist 2',
+            images: [{ url: 'https://via.placeholder.com/56' }],
+            owner: { display_name: 'User2' },
+            tracks: { total: 10 },
+            external_urls: { spotify: 'https://open.spotify.com/playlist/playlist2' }
+        }
     ],
     total: 2
 };
@@ -68,11 +68,9 @@ describe('PlaylistsPage', () => {
 
     // Helper to wait for loading to finish
     const waitForLoadingToFinish = async () => {
-        // initial loading state expectations
+        // initial loading state expectation
         expect(screen.getByRole('status')).toHaveTextContent(/loading playlists/i);
-        await waitFor(() => {
-            expect(screen.queryByTestId('loading-indicator')).not.toBeInTheDocument();
-        });
+        await waitForElementToBeRemoved(() => screen.queryByTestId('loading-indicator'));
     };
 
     test('renders playlists page', async () => {
