@@ -9,11 +9,10 @@ import * as spotifyApi from '../../api/spotify-me.js';
 import { beforeEach, afterEach, jest } from '@jest/globals';
 import { KEY_ACCESS_TOKEN } from '../../constants/storageKeys.js';
 import { buildTitle } from '../../constants/appMeta.js';
-import * as handleTokenErrorModule from '../../utils/handleTokenError.js';
 
 // Mock playlists data
 const playlistsData = {
-    items: [
+    items: [    
         { 
             id: 'playlist1', 
             name: 'My Playlist 1', 
@@ -71,8 +70,6 @@ describe('PlaylistsPage', () => {
     const waitForLoadingToFinish = async () => {
         // initial loading state expectations
         expect(screen.getByRole('status')).toHaveTextContent(/loading playlists/i);
-        
-        // Wait for loading indicator to disappear
         await waitFor(() => {
             expect(screen.queryByTestId('loading-indicator')).not.toBeInTheDocument();
         });
@@ -139,9 +136,6 @@ describe('PlaylistsPage', () => {
     });
 
     test('redirects to login on token expiration', async () => {
-        // Mock handleTokenError
-        const handleTokenErrorSpy = jest.spyOn(handleTokenErrorModule, 'handleTokenError').mockReturnValue(true);
-        
         // Mock fetchUserPlaylists to return token expired error
         jest.spyOn(spotifyApi, 'fetchUserPlaylists').mockResolvedValue({ playlists: [], error: 'The access token expired' });
 
@@ -151,8 +145,8 @@ describe('PlaylistsPage', () => {
         // Wait for loading to finish
         await waitForLoadingToFinish();
 
-        // Verify handleTokenError was called
-        expect(handleTokenErrorSpy).toHaveBeenCalledWith('The access token expired', expect.any(Function));
+        // Verify redirection to login page
+        expect(screen.getByText('Login Page')).toBeInTheDocument();
     });
 
     test('verify styling and accessibility attributes using role', async () => {
