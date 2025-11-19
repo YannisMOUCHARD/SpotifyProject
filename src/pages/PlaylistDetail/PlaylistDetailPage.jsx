@@ -61,7 +61,6 @@ export default function PlaylistDetailPage() {
         <output 
           className="playlist-detail-loading" 
           data-testid="loading-indicator"
-          role="status"
         >
           Loading playlist…
         </output>

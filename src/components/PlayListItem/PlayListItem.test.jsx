@@ -66,8 +66,8 @@ describe('PlayListItem component', () => {
             </MemoryRouter>
         );
 
-        const playlistItem = screen.getByTestId(`playlist-item-${playlist.id}`);
-        fireEvent.click(playlistItem);
+        const playlistButton = screen.getByRole('button');
+        fireEvent.click(playlistButton);
 
         expect(mockNavigate).toHaveBeenCalledWith(`/playlist/${playlist.id}`);
     });
@@ -88,8 +88,8 @@ describe('PlayListItem component', () => {
             </MemoryRouter>
         );
 
-        const playlistItem = screen.getByTestId(`playlist-item-${playlist.id}`);
-        fireEvent.keyDown(playlistItem, { key: 'Enter' });
+        const playlistButton = screen.getByRole('button');
+        fireEvent.keyDown(playlistButton, { key: 'Enter' });
 
         expect(mockNavigate).toHaveBeenCalledWith(`/playlist/${playlist.id}`);
     });
@@ -110,8 +110,8 @@ describe('PlayListItem component', () => {
             </MemoryRouter>
         );
 
-        const playlistItem = screen.getByTestId(`playlist-item-${playlist.id}`);
-        fireEvent.keyDown(playlistItem, { key: 'Space' });
+        const playlistButton = screen.getByRole('button');
+        fireEvent.keyDown(playlistButton, { key: 'Space' });
 
         expect(mockNavigate).not.toHaveBeenCalled();
     });
