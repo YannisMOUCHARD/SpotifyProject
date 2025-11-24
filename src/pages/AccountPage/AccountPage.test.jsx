@@ -132,8 +132,8 @@ describe('AccountPage', () => {
     });
 
     test('redirects to login on token expiration', async () => {
-        // Mock fetchAccountProfile to return token expired error
-        jest.spyOn(spotifyApi, 'fetchAccountProfile').mockResolvedValue({ profile: null, error: 'The access token expired' });
+        // Mock fetchAccountProfile to return token expired error (use { data, error } shape)
+        jest.spyOn(spotifyApi, 'fetchAccountProfile').mockResolvedValue({ data: null, error: 'The access token expired' });
 
         // Render AccountPage
         renderAccountPage();
@@ -141,8 +141,8 @@ describe('AccountPage', () => {
         // Wait for loading to finish
         await waitForLoadingToFinish();
 
-        // Verify redirection to login page
-        expect(screen.getByText('Login Page')).toBeInTheDocument();
+        // Verify redirection to login page (await navigation)
+        expect(await screen.findByText('Login Page')).toBeInTheDocument();
     });
 
     test('verify styling and accessibility attributes using role', async () => {
