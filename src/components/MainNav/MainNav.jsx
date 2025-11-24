@@ -21,6 +21,7 @@ function NavItem({ to, children }) {
 // Links for main navigation items
 const TopTracksLink = () => <NavItem to="/top-tracks">Top Tracks</NavItem>;
 const TopArtistsLink = () => <NavItem to="/top-artists">Top Artists</NavItem>;
+const TopArtistLink = () => <NavItem to="/top-artist">Top Artists Playlist</NavItem>;
 const PlaylistsLink = () => <NavItem to="/playlists">Playlists</NavItem>;
 
 /**
@@ -78,6 +79,7 @@ export default function MainNav() {
       <nav className="layout-nav main-nav-flex">
         <TopTracksLink />
         <TopArtistsLink />
+        <TopArtistLink />
         <PlaylistsLink />
       </nav>
       <AccountNav profile={profile} loading={loading} error={error} />

@@ -1,0 +1,80 @@
+.top-artist-page .top-artist-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.top-artist-page input {
+  padding: 6px 8px;
+}
+.top-artist-page button {
+  padding: 6px 10px;
+}
+
+/* List and feedback styles aligned with TopArtistsPage */
+.artists-list {
+  padding: 0;
+  list-style: decimal inside;
+}
+
+.artists-loading, .artists-error {
+  margin-top: 20vh;
+  text-align: center;
+}
+
+.artists-error { color: red; }
+
+.artist-list-item {
+  padding: 16px 12px;
+  margin-bottom: 14px; /* space between items */
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  min-height: 84px; /* make item taller */
+}
+
+.artist-cover {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-right: 16px;
+}
+
+.artist-list-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.artist-info {
+  flex: 1 1 auto;
+}
+
+.artist-name {
+  font-weight: 600;
+  color: black;
+  font-size: 1.05rem;
+}
+
+.artist-tracks {
+  color: #666;
+  font-size: 1rem;
+}
+
+.artist-link {
+  margin-left: 12px;
+  color: #1db954; /* spotify green */
+  text-decoration: none;
+}
+
+/* Keep fallback table styles in case table is used elsewhere */
+.top-artist-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.top-artist-table th, .top-artist-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}

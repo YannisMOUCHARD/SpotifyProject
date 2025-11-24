@@ -131,8 +131,8 @@ describe('PlaylistsPage', () => {
         // Wait for loading to finish
         await waitForLoadingToFinish();
 
-        // Verify redirection to login page
-        expect(screen.getByText('Login Page')).toBeInTheDocument();
+        // Verify redirection to login page (wait for navigation)
+        await screen.findByText('Login Page');
     });
 
     test('verify styling and accessibility attributes using role', async () => {

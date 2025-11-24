@@ -24,7 +24,7 @@ describe('Layout Component', () => {
         const topTracksLink = screen.getByRole('link', { name: /top tracks/i });
         expect(topTracksLink).toHaveAttribute('href', '/top-tracks');
 
-        const topArtistsLink = screen.getByRole('link', { name: /top artists/i });
+        const topArtistsLink = screen.getByRole('link', { name: /^Top Artists$/i });
         expect(topArtistsLink).toHaveAttribute('href', '/top-artists');
 
         const playlistsLink = screen.getByRole('link', { name: /playlists/i });
