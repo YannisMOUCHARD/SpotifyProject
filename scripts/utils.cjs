@@ -1,6 +1,11 @@
 var dotenv = require("dotenv");
 dotenv.config({ path: ".env.local" });
 
+// Configure proxy agent for fetch requests
+const { HttpsProxyAgent } = require("https-proxy-agent");
+const proxyUrl = process.env.HTTPS_PROXY || process.env.HTTP_PROXY;
+const agent = proxyUrl ? new HttpsProxyAgent(proxyUrl) : undefined;
+
 /**
  * Encodes client ID and secret for Basic Auth.
  * @param {*} clientId 
@@ -33,6 +38,7 @@ function generateAccessToken() {
       "Content-Type": "application/x-www-form-urlencoded",
     },
     body: "grant_type=client_credentials",
+    agent: agent, // Use proxy agent if available
   })
     .then(function (response) {
       return response.json();

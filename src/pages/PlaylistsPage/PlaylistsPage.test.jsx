@@ -122,8 +122,8 @@ describe('PlaylistsPage', () => {
     });
 
     test('redirects to login on token expiration', async () => {
-        // Mock fetchUserPlaylists to return token expired error
-        jest.spyOn(spotifyApi, 'fetchUserPlaylists').mockResolvedValue({ playlists: [], error: 'The access token expired' });
+        // Mock fetchUserPlaylists to return token expired error (use { data, error } shape)
+        jest.spyOn(spotifyApi, 'fetchUserPlaylists').mockResolvedValue({ data: { items: [] }, error: 'The access token expired' });
 
         // Render the PlaylistsPage
         renderPlaylistsPage();

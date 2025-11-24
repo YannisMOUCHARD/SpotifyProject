@@ -117,8 +117,8 @@ describe('TopTracksPage', () => {
     });
 
     test('redirects to login on token expiration', async () => {
-        // Mock fetchUserTopTracks to return token expired error
-        jest.spyOn(spotifyApi, 'fetchUserTopTracks').mockResolvedValue({ tracks: [], error: 'The access token expired' });
+        // Mock fetchUserTopTracks to return token expired error (use { data, error } shape)
+        jest.spyOn(spotifyApi, 'fetchUserTopTracks').mockResolvedValue({ data: { items: [], total: 0 }, error: 'The access token expired' });
 
         // Render the TopTracksPage
         renderTopTracksPage();

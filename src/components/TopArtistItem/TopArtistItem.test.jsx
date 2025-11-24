@@ -30,7 +30,10 @@ describe('TopArtistItem component', () => {
         // details assertions
         expect(listItem).toHaveTextContent(artist.name);
         expect(listItem).toHaveTextContent(`Genres: ${artist.genres.join(', ')}`);
-        expect(listItem).toHaveTextContent(`Followers: ${artist.followers.total.toLocaleString()}`);
+        // assert followers label and the raw number appear (formatting may vary by locale)
+        expect(listItem).toHaveTextContent(/Followers:/);
+        const digitsPattern = String(artist.followers.total).split('').join('\\D*');
+        expect(listItem).toHaveTextContent(new RegExp(digitsPattern));
         expect(listItem).toHaveTextContent(`Popularity: ${artist.popularity}`);
 
         // link to artist page
@@ -62,7 +65,10 @@ describe('TopArtistItem component', () => {
         // details assertions
         expect(listItem).toHaveTextContent(artist.name);
         expect(listItem).toHaveTextContent(`Genres: ${artist.genres.join(', ')}`);
-        expect(listItem).toHaveTextContent(`Followers: ${artist.followers.total.toLocaleString()}`);
+        // assert followers label and the raw number appear (formatting may vary by locale)
+        expect(listItem).toHaveTextContent(/Followers:/);
+        const digitsPattern2 = String(artist.followers.total).split('').join('\\D*');
+        expect(listItem).toHaveTextContent(new RegExp(digitsPattern2));
 
         // link to artist page
         const link = within(listItem).getByRole('link', { name: /view artist/i });
