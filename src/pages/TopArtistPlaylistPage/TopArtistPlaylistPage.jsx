@@ -1,23 +1,52 @@
 import { useState, useEffect } from 'react';
 import { artistTopForPlaylist } from '../../services/artist-count-for-playlist.js';
 import { fetchArtistByName } from '../../api/spotify-artists.js';
+import { fetchUserPlaylists } from '../../api/spotify-me.js';
 import { useRequireToken } from '../../hooks/useRequireToken.js';
 import { buildTitle } from '../../constants/appMeta.js';
 import './TopArtistPlaylistPage.css';
 
 export default function TopArtistPage() {
   const [playlistId, setPlaylistId] = useState('');
+  const [userPlaylists, setUserPlaylists] = useState([]);
+  const [selectedPlaylist, setSelectedPlaylist] = useState('');
+  const [playlistsLoading, setPlaylistsLoading] = useState(false);
   const [top, setTop] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const { token } = useRequireToken();
 
+  // Load user playlists when token is available
+  useEffect(() => {
+    if (token) {
+      const loadUserPlaylists = async () => {
+        setPlaylistsLoading(true);
+        try {
+          const result = await fetchUserPlaylists(token, 50); // Fetch up to 50 playlists
+          const playlists = result?.data?.items || [];
+          setUserPlaylists(playlists);
+        } catch (err) {
+          console.error('Failed to load playlists:', err);
+        } finally {
+          setPlaylistsLoading(false);
+        }
+      };
+      loadUserPlaylists();
+    }
+  }, [token]);
+
   const onClick = async () => {
+    const currentPlaylistId = selectedPlaylist || playlistId;
+    if (!currentPlaylistId) {
+      setError('Please enter a playlist ID or select a playlist');
+      return;
+    }
+
     setError(null);
     setLoading(true);
     try {
-      const result = await artistTopForPlaylist(token, playlistId, 5);
+      const result = await artistTopForPlaylist(token, currentPlaylistId, 5);
       const list = result || [];
 
       // Enrich each artist entry with image and spotify link by searching the artist
@@ -54,7 +83,35 @@ export default function TopArtistPage() {
       <div className="top-artist-controls">
         <label htmlFor="playlist-id">Playlist ID</label>
         <input id="playlist-id" value={playlistId} onChange={(e) => setPlaylistId(e.target.value)} placeholder="Enter playlist id" />
-        <button onClick={onClick} disabled={loading || !playlistId || !token}>Top artists</button>
+        
+        <label htmlFor="user-playlist">Or select from your playlists</label>
+        <select 
+          id="user-playlist" 
+          value={selectedPlaylist} 
+          onChange={(e) => {
+            setSelectedPlaylist(e.target.value);
+            if (e.target.value) {
+              setPlaylistId(''); // Clear manual input when selecting from dropdown
+            }
+          }}
+          disabled={playlistsLoading}
+        >
+          <option value="">
+            {playlistsLoading ? 'Loading playlists...' : 'Choose a playlist'}
+          </option>
+          {userPlaylists.map((playlist) => (
+            <option key={playlist.id} value={playlist.id}>
+              {playlist.name} ({playlist.tracks.total} tracks)
+            </option>
+          ))}
+        </select>
+        
+        <button 
+          onClick={onClick} 
+          disabled={loading || (!playlistId && !selectedPlaylist) || !token}
+        >
+          Top artists
+        </button>
       </div>
 
       {loading && <output className="artists-loading" data-testid="loading-indicator">Loading top artists…</output>}
