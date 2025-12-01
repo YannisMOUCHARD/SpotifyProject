@@ -8,12 +8,6 @@ import './TopArtistItem.css';
  * @returns {JSX.Element} The rendered component
  */
 export default function TopArtistItem({ artist, index }) {
-  // Format followers number to match test expectations
-  const formatFollowers = (total) => {
-    if (!total) return '0';
-    return total.toLocaleString('en-US');
-  };
-
   return (
     <li className="artist-item" data-testid={`top-artist-item-${artist.id}`}>
       {artist.images?.[1] && (
@@ -26,29 +20,27 @@ export default function TopArtistItem({ artist, index }) {
       <div className="artist-details">
         <div className="artist-details-header">
           <div className="artist-title">
-            {index + 1}. {artist.name}
+            {index}. {artist.name}
           </div>
           <div className="artist-genres">
-            Genres: {artist.genres?.join(', ') || ''}
+            Genres: {artist.genres.join(', ')}
           </div>
         </div>
         <div className="artist-popularity">
           Popularity: {artist.popularity}
         </div>
         <div className="artist-followers">
-          Followers: {formatFollowers(artist.followers?.total)}
+          Followers: {artist.followers.total.toLocaleString()}
         </div>
       </div>
-      {artist.external_urls?.spotify && (
-        <a
-          href={artist.external_urls.spotify}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="artist-link"
-        >
-          View Artist
-        </a>
-      )}
+      <a
+        href={artist.external_urls.spotify}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="artist-link"
+      >
+        View Artist
+      </a>
     </li>
   );
 }
